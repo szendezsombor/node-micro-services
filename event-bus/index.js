@@ -3,11 +3,13 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 
 const app = express();
+const events = [];
 
 app.use(bodyParser.json());
 
 app.post('/events', (req, res) => {
     const event = req.body;
+    events.push(event);
 
     axios.post('http://localhost:4000/events', event).catch(console.error);
     axios.post('http://localhost:4001/events', event).catch(console.error);
@@ -15,6 +17,10 @@ app.post('/events', (req, res) => {
     axios.post('http://localhost:4003/events', event).catch(console.error);
 
     res.send({ status: 'OK' });
+});
+
+app.get('/events', (req, res) => {
+    res.send(events);
 })
 
 app.listen(4005, () => {
